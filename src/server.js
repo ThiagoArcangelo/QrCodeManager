@@ -14,10 +14,12 @@ app.use(express.json());
 // Models
 const User = require("./models/User");
 const Params = require("./models/Params");
+const Client = require('./routes/clientRoutes');
 
 app.use(userRoutes);
 app.use(publicRoutes);
 app.use(paramsRoutes);
+app.use(Client);
 
 // Credentials
 const dbUser = process.env.DB_USER;

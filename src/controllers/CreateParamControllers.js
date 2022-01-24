@@ -1,10 +1,16 @@
+const dataParams = require("../models/Params");
+const { v4 : uuidV4 } = require('uuid');
 const Params = require("../models/Params");
 
+// Listagem de URL
+
 exports.get = async (req, res) => {
-  const list = await Params.distinct('adress');
+  const list = await dataParams.distinct('adress');
 
   return res.status(200).json(list);
 };
+
+// Rota prar Criar novo Projeto
 
 exports.post = async (req, res) => {
   const { name, adress, password } = req.body;
@@ -17,18 +23,19 @@ exports.post = async (req, res) => {
     return res.status(422).json({ message: "A senha é obrigatória." });
   }
 
-  const adressExists = await Params.findOne({ adress: adress });
+  const adressExists = await dataParams.findOne({ adress: adress });
 
   if (adressExists) {
     return res
       .status(500)
-      .json("A url deste projeto ja esta registrado. Ultilize outra url");
+      .json("A url deste projeto ja esta registrado. Ultilize outra url");s
   }
 
-  const params = new Params({
+  const params = new dataParams({
     name,
     adress,
     password,
+    id: Params.id
   });
 
   try {

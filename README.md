@@ -27,18 +27,52 @@
 
 ### Tarefas
 
-- [] Criar página de login e senha
-- [x] Cadastra usuário Admin
-- [x] Criar login e senha
-<!-- - [] Atualização de senha -->
-- [] Redirecionar para a página Home
-- [] Criar a página Home com os campos necessários
-<!-- - [] Tornar página home privada -->
-- [x] Postar congifurações do projeto no banco de dados
-- [] Gerar link ou Qr Code com as informações postadas no banco de dados , para cada projeto
-- [] Redirecionar Usuário para a página UserHome após leitura do QR Code
-- [] Criar rota de usuário
-- [] Criar a página usuário com os campos input e senha
-- [] Deixar campo input salvo com a informação da URL a direcionar
-- [] Criar validação de senha para redirecionar o usuário
-- [] Redirecionar para o repositório após confirmação de senha
+## Página de login e senha
+
+- [] Criar página de login e senha - sessão de usuário
+- [x] Cadastra novo usuário Admin - Não obrigatório
+- [] Autenticação de Usuário - Obrigatório
+
+## Rota de Admin
+
+- [x] Criar novo projeto
+- [] Atualizar projeto 
+- [] Deletar projeto
+- [x] Listar projetos cadastrados
+- [x] Trazer a url do projeto
+
+## Banco de Dados
+
+- [x] Nome do projeto
+- [x] URL do repositório no drive
+- [x] Password 
+- [x] Id do projeto
+
+## Criar novo projeto
+
+- [x] Nome do projeto
+- [x] URL do repositório no drive
+- [x] Password 
+- [x] Id do projeto
+- [] QrCode generate - com link de redirecionamento p/repositório
+
+## Criar novo cliente(empresa)
+
+- [x] Nome da empresa
+- [x] Senha global
+- [x] Listar Clientes
+- [] Atualizar senha 
+
+## Criação de QR Code
+
+- [] Criar uma Url
+- [] Passar URL do drive como parametro
+- [] Na rota da aplicação dar um redirect para o repositório do projeto no drive
+
+## Interface de usuário
+
+- [] Campo de senha
+- [] Salvar automáticamente no input de login a url do repositório
+- [] Apos confirmação de senha redirecionar para o repositório
+- [] Tratar senha incorreta
+ 
