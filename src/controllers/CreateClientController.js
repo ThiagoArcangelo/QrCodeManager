@@ -3,7 +3,7 @@ const { v4 : uuidV4} = require('uuid');
 
 const uuid = uuidV4();
 
-// Criar novo usuário
+// Criar novo cliente
 
 exports.create = async (req, res) => {
     const { name, password } = req.body  
@@ -41,6 +41,7 @@ exports.get = async (req, res) => {
     return res.json(listClient);
 }
 
+// Deletar clientes
 exports.delete = async (req, res) => {
     
 }
