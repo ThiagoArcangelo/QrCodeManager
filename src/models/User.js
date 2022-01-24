@@ -1,12 +1,13 @@
 const mongoose = require("mongoose");
 
 const createUser = mongoose.Schema({
-  id: {
+  name: {
     type: String,
-    unique: true,
+    required: false
   },
   email: {
     type: String,
+    unique: true,
     required: true,
   },
   password: {

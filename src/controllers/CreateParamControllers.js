@@ -1,18 +1,19 @@
-const dataParams = require("../models/Params");
-const { v4 : uuidV4 } = require('uuid');
 const Params = require("../models/Params");
+const { v4: uuidV4 } = require('uuid');
+
+const uuid = uuidV4();
 
 // Listagem de URL
 
 exports.get = async (req, res) => {
-  const list = await dataParams.distinct('adress');
+  const list = await Params.distinct("adress");
 
   return res.status(200).json(list);
 };
 
 // Rota prar Criar novo Projeto
 
-exports.post = async (req, res) => {
+exports.create = async (req, res) => {
   const { name, adress, password } = req.body;
 
   if (!adress) {
@@ -23,25 +24,27 @@ exports.post = async (req, res) => {
     return res.status(422).json({ message: "A senha é obrigatória." });
   }
 
-  const adressExists = await dataParams.findOne({ adress: adress });
+  const adressExists = await Params.findOne({adress});
 
   if (adressExists) {
     return res
       .status(500)
-      .json("A url deste projeto ja esta registrado. Ultilize outra url");s
+      .json({
+        message: "A url deste projeto ja esta registrado. Ultilize outra url",
+      });
   }
 
-  const params = new dataParams({
+  const params = await new Params({
     name,
     adress,
     password,
-    id: Params.id
   });
 
   try {
     await params.save();
 
     res.status(201).json({ message: "Link criado com sucesso" });
+    
   } catch (error) {
     console.log(error, "Não foi possível salvar o arquivo no banco de dados.");
 
@@ -50,3 +53,4 @@ exports.post = async (req, res) => {
     });
   }
 };
+

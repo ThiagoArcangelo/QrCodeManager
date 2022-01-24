@@ -1,9 +1,11 @@
 const Client = require("../models/Client");
 const { v4 : uuidV4} = require('uuid');
 
+const uuid = uuidV4();
+
 // Criar novo usuário
 
-exports.post = async (req, res) => {
+exports.create = async (req, res) => {
     const { name, password } = req.body  
 
     if(!name) {
@@ -17,7 +19,6 @@ exports.post = async (req, res) => {
     const client = new Client({     
         name, 
         password,
-
     });
 
  
@@ -28,6 +29,7 @@ exports.post = async (req, res) => {
 
   } catch (error) {
       res.status(400).json({erro: error, message: 'Erro ao cadastrar o cliente'});
+      console.log(error)
   }
 };
 
@@ -39,6 +41,6 @@ exports.get = async (req, res) => {
     return res.json(listClient);
 }
 
-exports.delete = async (rea, res) => {
+exports.delete = async (req, res) => {
     
 }

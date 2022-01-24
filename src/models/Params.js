@@ -1,10 +1,6 @@
 const mongoose = require("mongoose");
 
 const paramSchema = mongoose.Schema({
-  id: {
-    type: String,
-    unique: true,
-  },
   name: {
     type: String,
     required: true,
@@ -16,7 +12,7 @@ const paramSchema = mongoose.Schema({
   password: {
     type: String,
     required: true,
-    mainlength: 4,
+    minlength: 4,
   },
 });
 

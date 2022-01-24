@@ -3,7 +3,7 @@ const controller = require('../controllers/CreateClientController');
 
 const router = Router();
 
-router.post('/client', controller.post);
+router.post('/client', controller.create);
 router.get('/client', controller.get);
 
 module.exports = router;
