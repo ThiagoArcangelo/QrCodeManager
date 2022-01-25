@@ -5,6 +5,10 @@ const paramSchema = mongoose.Schema({
     type: String,
     required: true,
   },
+  title: {
+    type: String,
+    required: true
+  },
   adress: {
     type: String,
     required: true,
@@ -13,6 +17,7 @@ const paramSchema = mongoose.Schema({
     type: String,
     required: true,
     minlength: 4,
+    select: false
   },
 });
 

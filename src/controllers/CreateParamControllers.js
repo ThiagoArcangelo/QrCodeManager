@@ -1,50 +1,68 @@
 const Params = require("../models/Params");
-const { v4: uuidV4 } = require('uuid');
 
-const uuid = uuidV4();
-
-// Listagem de URL
-
+// Listagem de URL - View
 exports.get = async (req, res) => {
-  const list = await Params.distinct("adress");
+  const list = await Params.find();
 
   return res.status(200).json(list);
 };
 
-// Rota prar Criar novo Projeto
+// Listar Url - View
+exports.getByURL = async (req, res) => {
+  Params.findById(req.params.id)
+    .then((data) => {
+      res.status(200).send(data);
 
+      res.redirect();
+    })
+    .catch((error) => {
+      res.status(400).send(error);
+    });
+};
+
+// Rota prar Criar novo Projeto - Admin
 exports.create = async (req, res) => {
-  
-  const { name, adress, password } = req.body;
+  try {
+    const { name, title, adress, password } = req.body;
 
-  if (!adress) {
-    return res.status(422).json({ message: "Digite o endereço de acesso" });
-  }
+    if (!name) {
+      return res.status(400).json({ messageg: "Digite o nome da empresa" });
+    }
 
-  if (!password) {
-    return res.status(422).json({ message: "A senha é obrigatória." });
-  }
+    if (!title) {
+      return res
+        .status(400)
+        .json({ messageg: "Digite um nome para o projeto" });
+    }
 
-  const adressExists = await Params.findOne({adress});
+    if (!adress) {
+      return res.status(400).json({ message: "Digite o endereço de acesso" });
+    }
 
-  if (adressExists) {
-    return res
-      .status(500)
-      .json({
+    if (!password) {
+      return res.status(400).json({ message: "A senha é obrigatória." });
+    }
+
+    const adressExists = await Params.findOne({ adress });
+
+    if (adressExists) {
+      return res.status(500).json({
         message: "A url deste projeto ja esta registrado. Ultilize outra url",
       });
-  }
+    }
 
-  const params = await new Params({
-    name,
-    adress,
-    password,
-  });
+    const params = await Params.create({
+      name,
+      title,
+      adress,
+      password,
+    });
 
-  try {
     await params.save();
 
     res.status(201).json({ message: "Link criado com sucesso" });
+
+    return params.adress
     
   } catch (error) {
     console.log(error, "Não foi possível salvar o arquivo no banco de dados.");
@@ -54,4 +72,3 @@ exports.create = async (req, res) => {
     });
   }
 };
-

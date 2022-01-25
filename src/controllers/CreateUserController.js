@@ -1,11 +1,10 @@
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
-const { v4 : uuidV4} = require('uuid');
+const { v4: uuidV4 } = require("uuid");
 
 const uuid = uuidV4();
 
-// Registro de usuário
-
+// Registro de usuário - Admin
 exports.create = async (req, res) => {
   const { name, email, password } = req.body;
   // const { email } = req.body;
@@ -22,7 +21,7 @@ exports.create = async (req, res) => {
   }
 
   // Checar se email está cadastrado
-  const userExists = await User.findOne({email});
+  const userExists = await User.findOne({ email });
 
   if (userExists) {
     return res.status(422).json({
@@ -31,16 +30,15 @@ exports.create = async (req, res) => {
   }
 
   // Objeto de criação de usuário
-  const user = new User({
+  const user = await User.create({
     name,
     email,
     // password: hashPassword,
     password,
+    id: uuidV4(),
   });
 
-
   try {
-
     await user.save();
 
     res.status(201).json({ message: "Usuário criado com sucesso" });
@@ -54,53 +52,40 @@ exports.create = async (req, res) => {
 };
 
 // Listar usuários
-
 exports.index = async (req, res) => {
   const listUser = await User.find({});
 
   return res.status(200).json(listUser);
 };
 
-// Atualizar usuário
-
+// Atualizar usuário - Admin
 exports.put = async (req, res) => {
-  const userUpdate = req.params.id;
-  const { password } = req.body;
+  const { id } = req.params.id;
+  const { name, password } = req.body;
 
-  try {
-    const user = User.updateOne({ password: password }, user);
-    if (user === 0) {
-      res.status(422).json({ message: "Usuário não encontrado" });
-      return;
-    }
-
-    res.save();
-
-    res.status(200).json(user);
-  } catch (error) {
-    res
-      .status(500)
-      .json({ erro: error, message: "A sua requisição não foi processada." });
-  }
-};
-
-// Deletar usuário
-
-exports.delete = async (req, res) => {
-  const id = req.params;
-
-  const user = await User.findOne({ _id: id });
+  const user = User.findOne((item) => item.id == id);
 
   if (!user) {
-    res.status(422).json({ message: "Usuário não encontrado!" });
-    return;
+    return res.status(204).json({ message: "O usuário não existe" });
   }
 
+  user.name = name;
+  user.password = password;
+
+  res.send(user);
+}
+
+// Deletar usuário - Admin
+exports.remove = async (req, res) => {
   try {
-    await User.deleteOne({ _id: ":id" });
 
-    res.status(200).json({ message: "Usuário removido com sucesso!" });
+    const user = await User.findByIdAndRemove(req.params.id);
+
+    res.status(200).json({message: "Cadastro removido com sucesso"})
+
   } catch (error) {
-    res.status(500).json({ erro: error });
+    res.status(400).json({message: "Erro ao processar sua requisição", error});
   }
+  
+
 };
