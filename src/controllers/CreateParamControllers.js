@@ -1,10 +1,13 @@
 const Params = require("../models/Params");
+const passwordVerify = require('../middlewares/passwordAuth');
 
 // Listagem de URL - View
 exports.get = async (req, res) => {
   const list = await Params.find();
 
-  return res.status(200).json(list);
+  res.redirect('/verify');
+
+  // return res.status(200).json(list);
 };
 
 // Listar Url - View
@@ -23,6 +26,7 @@ exports.getByURL = async (req, res) => {
 // Rota prar Criar novo Projeto - Admin
 exports.create = async (req, res) => {
   try {
+    
     const { name, title, adress, password } = req.body;
 
     if (!name) {
@@ -55,7 +59,7 @@ exports.create = async (req, res) => {
       name,
       title,
       adress,
-      password,
+      password
     });
 
     await params.save();
@@ -63,7 +67,7 @@ exports.create = async (req, res) => {
     res.status(201).json({ message: "Link criado com sucesso" });
 
     return params.adress
-    
+
   } catch (error) {
     console.log(error, "Não foi possível salvar o arquivo no banco de dados.");
 
@@ -72,3 +76,17 @@ exports.create = async (req, res) => {
     });
   }
 };
+
+exports.verify = async (req, res) => {
+  try {
+    let url = Params.distinct("adress");
+
+    (await url).toString()
+
+    if(passwordVerify.password == Params.password) {
+      res.redirect(url)
+    }    
+  } catch (error) {
+    
+  }
+}

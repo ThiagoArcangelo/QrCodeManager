@@ -1,22 +1,28 @@
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
-const { v4: uuidV4 } = require("uuid");
+const jwt = require('jsonwebtoken');
+const { config } = require("dotenv");
 
-const uuid = uuidV4();
+
+// Listar usuários
+exports.index = async (req, res) => {
+  const listUser = await User.find({});
+
+  return res.status(200).json(listUser);
+};
 
 // Registro de usuário - Admin
 exports.create = async (req, res) => {
-  const { name, email, password } = req.body;
+  const hashPass = bcrypt.hash(req.body.password, 10);
+  const { name, email } = req.body;
   // const { email } = req.body;
-
-  const hashPassword = await bcrypt.hash(req.body.password, 10);
 
   // validations
   if (!email) {
     return res.status(422).json({ message: "O email é obrigatório." });
   }
 
-  if (!password) {
+  if (!hashPass) {
     return res.status(422).json({ message: "O password é obrigatório." });
   }
 
@@ -33,9 +39,7 @@ exports.create = async (req, res) => {
   const user = await User.create({
     name,
     email,
-    // password: hashPassword,
-    password,
-    id: uuidV4(),
+    password: hashPass,
   });
 
   try {
@@ -47,45 +51,36 @@ exports.create = async (req, res) => {
       .status(500)
       .json({ erro: error, message: "Erro ao processar sua requisição." });
   }
-
-  //   res.redirect('home');
 };
-
-// Listar usuários
-exports.index = async (req, res) => {
-  const listUser = await User.find({});
-
-  return res.status(200).json(listUser);
-};
-
-// Atualizar usuário - Admin
-exports.put = async (req, res) => {
-  const { id } = req.params.id;
-  const { name, password } = req.body;
-
-  const user = User.findOne((item) => item.id == id);
-
-  if (!user) {
-    return res.status(204).json({ message: "O usuário não existe" });
-  }
-
-  user.name = name;
-  user.password = password;
-
-  res.send(user);
-}
-
-// Deletar usuário - Admin
-exports.remove = async (req, res) => {
+/* 
+exports.login = async (req, res) => {
   try {
+    const user = await User.findOne({ email: req.body.email });
 
-    const user = await User.findByIdAndRemove(req.params.id);
+    const passwordIsValid = bcrypt.compare(req.body.password, user.password);
 
-    res.status(200).json({message: "Cadastro removido com sucesso"})
+    if (user) {
+          
+    }
 
-  } catch (error) {
-    res.status(400).json({message: "Erro ao processar sua requisição", error});
+    const token = jwt.sign({id: user._id}, config.secret, {
+      expiresIn: config.expiresIn
+    })
+  } catch {
+
   }
-  
-
 };
+ */
+/* 
+Usuario.findOne({ email: req.body.email }, function (err, user) {
+  if (err) return res.status(500).send('Ocorreu um erro inesperado no servidor.');
+  if (!user) return res.status(404).send('Usuário não encontrato.');
+
+  var passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
+  if (!passwordIsValid) return res.status(401).send({ auth: false, token: null });
+
+  var token = jwt.sign({ id: user._id }, config.secret, {
+    expiresIn: config.expiresIn //Tempo que expira a chave
+  });
+  res.status(200).send({ auth: true, token: token });
+}); */
