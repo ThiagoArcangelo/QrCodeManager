@@ -1,42 +1,39 @@
 const Params = require("../models/Params");
-const passwordVerify = require('../middlewares/passwordAuth');
 
-// Listagem de URL - View
+// const passwordVerify = require("../middlewares/passwordAuth");
+
+// Listagem de URL - View => Admin
 exports.get = async (req, res) => {
   const list = await Params.find();
 
-  res.redirect('/verify');
-
-  // return res.status(200).json(list);
+  return res.status(200).json(list);  
 };
 
-// Listar Url - View
-exports.getByURL = async (req, res) => {
-  Params.findById(req.params.id)
-    .then((data) => {
-      res.status(200).send(data);
+// Listar Url - View => Parametro para permissãoa
+exports.getById = async (req, res) => {
+  const { _id } = req.params;
 
-      res.redirect();
-    })
-    .catch((error) => {
-      res.status(400).send(error);
-    });
-};
+  const getContent = Params.findOne({_id}, (err, content) => {
+    if(err) {
+      return res.status(400).json({message: "Erro ao processar requisição "})
+    }
+    res.json(content.adress);
+  });
+  
+}
 
-// Rota prar Criar novo Projeto - Admin
+
+// Criar novo Projeto - Admin
 exports.create = async (req, res) => {
   try {
-    
     const { name, title, adress, password } = req.body;
 
     if (!name) {
-      return res.status(400).json({ messageg: "Digite o nome da empresa" });
+      return res.status(400).json({ message: "Digite o nome da empresa" });
     }
 
     if (!title) {
-      return res
-        .status(400)
-        .json({ messageg: "Digite um nome para o projeto" });
+      return res.status(400).json({ message: "Digite um nome para o projeto" });
     }
 
     if (!adress) {
@@ -59,34 +56,31 @@ exports.create = async (req, res) => {
       name,
       title,
       adress,
-      password
+      password,
     });
 
     await params.save();
 
     res.status(201).json({ message: "Link criado com sucesso" });
 
-    return params.adress
-
+    // return params.adress;
   } catch (error) {
     console.log(error, "Não foi possível salvar o arquivo no banco de dados.");
 
-    res.status(500).json(error, {
+    res.status(400).json(error, {
       message: "Não foi possível salvar o arquivo no banco de dados.",
     });
   }
 };
 
-exports.verify = async (req, res) => {
-  try {
-    let url = Params.distinct("adress");
 
-    (await url).toString()
+// Autenticação
+exports.permission = async (req, res) => {
+  const permissions = await Param.findOne({ password });
 
-    if(passwordVerify.password == Params.password) {
-      res.redirect(url)
-    }    
-  } catch (error) {
-    
+  if (req.body.password == permissions) {
+    res.redirect("/project");
+  } else {
+    res.status(400).send("Erro ao processar requisição");
   }
-}
+};

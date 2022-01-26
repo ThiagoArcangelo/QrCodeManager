@@ -21,4 +21,4 @@ const paramSchema = mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model("Param", paramSchema);
+module.exports = mongoose.model("Params", paramSchema);

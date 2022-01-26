@@ -1,6 +1,7 @@
 require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
+const cors = require('cors');
 
 // Routes
 const userRoutes = require("./routes/userRoutes");
@@ -9,8 +10,9 @@ const paramsRoutes = require("./routes/paramsRoutes");
 
 const app = express();
 
-app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(cors());
 
 // Models
 const User = require("./models/User");
