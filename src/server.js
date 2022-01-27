@@ -7,6 +7,7 @@ const cors = require('cors');
 const userRoutes = require("./routes/userRoutes");
 const publicRoutes = require("./routes/publicRoutes");
 const paramsRoutes = require("./routes/paramsRoutes");
+const clientRoutes = require('./routes/clientRoutes')
 
 const app = express();
 
@@ -22,7 +23,7 @@ const Client = require('./routes/clientRoutes');
 app.use(userRoutes);
 app.use(publicRoutes);
 app.use(paramsRoutes);
-app.use(Client);
+app.use(clientRoutes);
 
 // Credentials
 const dbUser = process.env.DB_USER;

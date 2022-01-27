@@ -1,7 +1,6 @@
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
 // const jwt = require("jsonwebtoken");
-// const { config } = require("dotenv");
 
 // Listar usuários
 exports.index = async (req, res) => {
@@ -49,3 +48,36 @@ exports.create = async (req, res) => {
     res.status(400).json({error, message: "Erro ao processar sua requisição." });
   }
 };
+
+// Atualização de Cadastro do Usuário
+exports.update = async (req, res) => {
+  const {id} = req.params;
+ 
+  try {
+
+  const UserUpdate = await User.findByIdAndUpdate(id, req.body);
+
+  res.status(200).json(UserUpdate)
+
+  } catch (error) {
+    res.status(400).json({error, msg: "Erro ao processar sua requisição"});
+  }
+  
+}
+
+// Remove usuário 
+exports.remove = async (req, res) => {
+  const { id } = req.params;
+   
+  try {
+    const userClient = await User.findByIdAndRemove(id);
+
+    if(!userClient) {
+      res.status(200).json('Cliente removido');
+    }
+
+    
+  } catch (error) {
+    res.status(400).json({error, msg: "Erro ao processar sua requisição"});
+  }
+}

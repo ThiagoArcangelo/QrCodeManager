@@ -1,10 +1,12 @@
 const Params = require("../models/Params");
 
-// middleware
 
-
+                // middleware
 const authorize = async (req, res, next) => {
-  console.log("Trazendo parametros do banco de dados");
+
+  next();
 } 
 
 module.exports = authorize;
+
+

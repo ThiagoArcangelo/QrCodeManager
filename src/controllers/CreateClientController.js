@@ -35,3 +35,37 @@ exports.get = async (req, res) => {
 
   return res.json(listClient);
 };
+
+// Atualização de Cadastro
+exports.update = async (req, res) => {
+  const {id} = req.params;
+  console.log(id);
+
+  try {
+
+  const getUpdate = await Client.findByIdAndUpdate(id, req.body);
+
+  res.status(200).json(getUpdate)
+
+  } catch (error) {
+    res.status(400).json({error, msg: "Erro ao processar sua requisição"});
+  }
+  
+}
+
+// Remove cadastro de Cliente
+exports.remove = async (req, res) => {
+  const { id } = req.params;
+   
+  try {
+    const removeClient = await Client.findByIdAndRemove(id);
+
+    if(!removeClient) {
+      res.status(200).json('Cliente removido');
+    }
+
+    
+  } catch (error) {
+    res.status(400).json({error, msg: "Erro ao processar sua requisição"});
+  }
+}

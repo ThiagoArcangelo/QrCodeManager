@@ -1,6 +1,5 @@
 const Params = require("../models/Params");
-
-// const passwordVerify = require("../middlewares/passwordAuth");
+const jwt = require('jsonwebtoken');
 
 // Listagem de URL - View => Admin
 exports.get = async (req, res) => {
@@ -17,7 +16,8 @@ exports.getById = async (req, res) => {
     if(err) {
       return res.status(400).json({message: "Erro ao processar requisição "})
     }
-    res.json(content.adress);
+    // res.json(content.adress);
+    res.redirect('/entrar')
   });
   
 }
@@ -73,14 +73,34 @@ exports.create = async (req, res) => {
   }
 };
 
+// Atualização de senha do projeto
+exports.updatePassword = async (req, res) => {
+  const id = req.params;
+  const { password } = req.body;
+
+  try {
+    const projectUpdate = await Params.findByIdAndUpdate(id, password);
+
+    res.status(200).json({msg: "Senha atualizada com sucesso"});
+    
+  } catch (error) {
+    res.status(400).json({erro, msg: "Erro ao processar sua requisição"});
+  }
+}
 
 // Autenticação
-exports.permission = async (req, res) => {
-  const permissions = await Param.findOne({ password });
+exports.authenticate = async (req, res) => {
+  const { password } = req.body;
 
-  if (req.body.password == permissions) {
-    res.redirect("/project");
+  const {id} = req.params;
+
+  const permissions = await Params.find();
+
+  if (password) {
+    res.redirect("/project/:_id");
   } else {
-    res.status(400).send("Erro ao processar requisição");
+    res.status(400).send("Senha incorreta");
   }
 };
+
+
