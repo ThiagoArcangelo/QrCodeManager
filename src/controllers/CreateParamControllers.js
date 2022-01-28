@@ -1,27 +1,29 @@
 const Params = require("../models/Params");
-const jwt = require('jsonwebtoken');
+// const jwt = require('jsonwebtoken');
 
 // Listagem de URL - View => Admin
 exports.get = async (req, res) => {
   const list = await Params.find();
 
-  return res.status(200).json(list);  
+  return res.status(200).json(list);
 };
 
 // Listar Url - View => Parametro para permissãoa
-exports.getById = async (req, res) => {
-  const { _id } = req.params;
+exports.getById =  (req, res) => {
+  const { id } = req.params; 
 
-  const getContent = Params.findOne({_id}, (err, content) => {
-    if(err) {
-      return res.status(400).json({message: "Erro ao processar requisição "})
-    }
-    // res.json(content.adress);
-    res.redirect('/entrar')
-  });
-  
-}
+  try {
+    Params.findOne({ id }, (err, content) => {
+      if (err) {
+        res.status(500).json({ erro: err });
+      }
+      res.status(200).json(content.adress);
+    });
 
+  } catch (error) {
+    res.status(400).json({msg: "Erro ao processar sua requisição "});
+  }
+};
 
 // Criar novo Projeto - Admin
 exports.create = async (req, res) => {
@@ -81,26 +83,57 @@ exports.updatePassword = async (req, res) => {
   try {
     const projectUpdate = await Params.findByIdAndUpdate(id, password);
 
-    res.status(200).json({msg: "Senha atualizada com sucesso"});
+    if(password !== ''){
+      res.status(200).json({ msg: "Senha atualizada com sucesso" });
+    } else {
+      res.status(400).json({msg: "Digite uma senha válida"});
+    }
     
   } catch (error) {
-    res.status(400).json({erro, msg: "Erro ao processar sua requisição"});
-  }
-}
-
-// Autenticação
-exports.authenticate = async (req, res) => {
-  const { password } = req.body;
-
-  const {id} = req.params;
-
-  const permissions = await Params.find();
-
-  if (password) {
-    res.redirect("/project/:_id");
-  } else {
-    res.status(400).send("Senha incorreta");
+    res.status(400).json({msg: "Erro ao processar sua requisição" });
   }
 };
+
+// Autenticação
+exports.login = async (req, res) => {
+
+  const {name, password } = req.body;
+
+  const passwordExists = await Params.findOne({name, password});
+
+  const paramsExists = {
+    password: req.body.password,
+    name: req.body.name
+  }
+
+  try {
+    if(paramsExists) {
+      res.redirect('/project/:id');
+    }
+  } catch (error) {
+    res.status(500).json({msg: "Erro ao processar sua requisição"});
+  }
+
+  
+
+
+
+ /* const { password } = req.body; 
+
+  const id = res.locals.id;
+  
+    try {
+
+      if(password == res.password) {
+        res.redirect(`/project/:id`)
+      }
+      
+    } catch (error) {
+      res.status(500).json({msg: "Erro ao processar sua requisição"});
+    }  */
+  }
+
+  
+
 
 
