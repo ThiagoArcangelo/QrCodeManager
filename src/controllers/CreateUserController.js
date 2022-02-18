@@ -3,7 +3,7 @@ const bcrypt = require("bcrypt");
 // const jwt = require("jsonwebtoken");
 
 // Listar usuários
-exports.index = async (req, res) => {
+exports.list = async (req, res) => {
   const listUser = await User.find({});
 
   return res.status(200).json(listUser);

@@ -4,7 +4,7 @@ const controller = require("../controllers/CreateUserController");
 const router = Router();
 
 router.post("/admin", controller.create);
-router.get("/admin", controller.index);
+router.get("/admin", controller.list);
 router.put('/admin/:id', controller.update);
 router.delete('/admin/:id', controller.remove);
 

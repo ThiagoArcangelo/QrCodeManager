@@ -8,22 +8,19 @@ exports.get = async (req, res) => {
   return res.status(200).json(list);
 };
 
+
 // Listar Url - View => Parametro para permissãoa
-exports.getById =  (req, res) => {
-  const { id } = req.params; 
+exports.getById = async (req, res) => {
+  const { id } = req.params;
 
-  try {
-    Params.findOne({ id }, (err, content) => {
-      if (err) {
-        res.status(500).json({ erro: err });
-      }
-      res.status(200).json(content.adress);
-    });
-
-  } catch (error) {
-    res.status(400).json({msg: "Erro ao processar sua requisição "});
-  }
+  const getParams = Params.findById( id , (err, content) => {
+    if (err) {
+      res.status(500).json({ erro: err });
+    } else if(content.adress) {
+    return res.status(200).json(content.adress);
+  }}); 
 };
+
 
 // Criar novo Projeto - Admin
 exports.create = async (req, res) => {
@@ -75,65 +72,36 @@ exports.create = async (req, res) => {
   }
 };
 
-// Atualização de senha do projeto
+// Atualização de senha do Projeto
 exports.updatePassword = async (req, res) => {
-  const id = req.params;
-  const { password } = req.body;
-
+  const {id} = req.params;
+ 
   try {
-    const projectUpdate = await Params.findByIdAndUpdate(id, password);
 
-    if(password !== ''){
-      res.status(200).json({ msg: "Senha atualizada com sucesso" });
-    } else {
-      res.status(400).json({msg: "Digite uma senha válida"});
-    }
-    
+  const paramsUpdate = await Params.findByIdAndUpdate(id, req.body);
+
+  res.status(200).json(paramsUpdate)
+
   } catch (error) {
-    res.status(400).json({msg: "Erro ao processar sua requisição" });
+    res.status(400).json({error, msg: "Erro ao processar sua requisição"});
   }
+  
 };
 
-// Autenticação
-exports.login = async (req, res) => {
-
-  const {name, password } = req.body;
-
-  const passwordExists = await Params.findOne({name, password});
-
-  const paramsExists = {
-    password: req.body.password,
-    name: req.body.name
-  }
-
+exports.remove = async (req, res) => {
+  const { id } = req.params;
+   
   try {
-    if(paramsExists) {
-      res.redirect('/project/:id');
+    const paramsExists = await Params.findByIdAndRemove(id);
+
+    if(!paramsExists) {
+      res.status(200).json('Cliente removido');
     }
+
+    
   } catch (error) {
-    res.status(500).json({msg: "Erro ao processar sua requisição"});
+    res.status(400).json({error, msg: "Erro ao processar sua requisição"});
   }
-
-  
-
-
-
- /* const { password } = req.body; 
-
-  const id = res.locals.id;
-  
-    try {
-
-      if(password == res.password) {
-        res.redirect(`/project/:id`)
-      }
-      
-    } catch (error) {
-      res.status(500).json({msg: "Erro ao processar sua requisição"});
-    }  */
-  }
-
-  
-
+};
 
 
