@@ -1,31 +1,21 @@
-const Params = require("../models/Params");
+const User = require('../models/User');
 
-const authorize = async (req, res, next) => {
+exports.authorize = async (req, res, next) => {
   const { id } = req.params;
+  const { password } = req.body;
 
-  const getId = await Params.findById(id);
+  const userExists = await User.find({id: id, password: password});
 
-  if (!getId) {
-    return res.status(400).json({ error: "Bad request" });
-  }
+  if(!userExists) {
+    res.status(400).json({message: 'Not found'});
+  } 
 
-  try {
-    const password = await getId.password;
- 
-    res.password = password;
+  res.redirect(`client/${id}`);
 
-    if (!password) {
-      return res
-        .status(400)
-        .json({ message: "Erro ao processar sua requisição" });
-    }
-  } catch (error) {
-    return res
-      .status(500)
-      .json({ error, message: "A sua requisição não foi processada." });
-  }
 
   next();
-};
 
-module.exports = authorize;
+}
+
+
+

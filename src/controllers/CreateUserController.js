@@ -1,5 +1,5 @@
 const User = require("../models/User");
-const bcrypt = require("bcrypt");
+// const bcrypt = require("bcrypt");
 // const jwt = require("jsonwebtoken");
 
 // Listar usuários
@@ -38,46 +38,60 @@ exports.create = async (req, res) => {
       name,
       email,
       // password: hashPass,
-      password
+      password,
     });
 
     await user.save();
 
-    res.status(201).json({message: "Usuário criado com sucesso" });
+    res.status(201).json({ message: "Usuário criado com sucesso" });
   } catch (error) {
-    res.status(400).json({error, message: "Erro ao processar sua requisição." });
+    res
+      .status(400)
+      .json({ error, message: "Erro ao processar sua requisição." });
   }
 };
 
 // Atualização de Cadastro do Usuário
 exports.update = async (req, res) => {
-  const {id} = req.params;
- 
+  const { id } = req.params;
+
   try {
+    const UserUpdate = await User.findByIdAndUpdate(id, req.body);
 
-  const UserUpdate = await User.findByIdAndUpdate(id, req.body);
-
-  res.status(200).json(UserUpdate)
-
+    res.status(200).json(UserUpdate);
   } catch (error) {
-    res.status(400).json({error, msg: "Erro ao processar sua requisição"});
+    res.status(400).json({ error, msg: "Erro ao processar sua requisição" });
   }
-  
-}
+};
 
-// Remove usuário 
+// Remove usuário
 exports.remove = async (req, res) => {
   const { id } = req.params;
-   
+
   try {
     const userClient = await User.findByIdAndRemove(id);
 
-    if(!userClient) {
-      res.status(200).json('Cliente removido');
+    if (!userClient) {
+      res.status(200).json("Cliente removido");
     }
-
-    
   } catch (error) {
-    res.status(400).json({error, msg: "Erro ao processar sua requisição"});
+    res.status(400).json({ error, msg: "Erro ao processar sua requisição" });
   }
-}
+};
+
+exports.signIn = async (req, res) => {
+  const { email, password } = req.body;
+
+  const userExists = await User.findOne({ email: email, password: password});
+
+  if (!userExists) {
+    res.status(400).json({ message: "Email ou Senha incorretos" });
+  } else {
+    res.redirect('/client');
+    // res.send("Direcionado para a rota create client");
+  }
+};
+
+exports.signOut = (req, res) => {
+  
+};

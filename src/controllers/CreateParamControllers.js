@@ -8,7 +8,6 @@ exports.get = async (req, res) => {
   return res.status(200).json(list);
 };
 
-
 // Listar Url - View => Parametro para permissãoa
 exports.getById = async (req, res) => {
   const { id } = req.params;
@@ -20,7 +19,6 @@ exports.getById = async (req, res) => {
     return res.status(200).json(content.adress);
   }}); 
 };
-
 
 // Criar novo Projeto - Admin
 exports.create = async (req, res) => {
@@ -73,7 +71,7 @@ exports.create = async (req, res) => {
 };
 
 // Atualização de senha do Projeto
-exports.updatePassword = async (req, res) => {
+exports.update = async (req, res) => {
   const {id} = req.params;
  
   try {
