@@ -87,11 +87,9 @@ exports.signIn = async (req, res) => {
   if (!userExists) {
     res.status(400).json({ message: "Email ou Senha incorretos" });
   } else {
-    res.redirect('/client');
+    // res.redirect('/client');
     // res.send("Direcionado para a rota create client");
   }
 };
 
-exports.signOut = (req, res) => {
-  
-};
+exports.signOut = (req, res) => {};
