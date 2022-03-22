@@ -10,20 +10,22 @@ exports.get = async (req, res) => {
 
 // Listar Url - View => Parametro para permissãoa
 exports.getById = async (req, res) => {
-  const { id } = req.params;
+  const { id, key } = req.params;
 
-  const getParams = Params.findById( id , (err, content) => {
+  const getParams = Params.findById(id, (err, content) => {
     if (err) {
       res.status(500).json({ erro: err });
-    } else if(content.adress) {
-    return res.status(200).json(content.adress);
-  }}); 
+    } 
+    else if (content.adress) {
+      return res.status(200).json(content.adress); 
+    }
+  });
 };
 
 // Criar novo Projeto - Admin
 exports.create = async (req, res) => {
   try {
-    const { name, title, adress, password } = req.body;
+    const { name, title, adress, key } = req.body;
 
     if (!name) {
       return res.status(400).json({ message: "Digite o nome da empresa" });
@@ -37,7 +39,7 @@ exports.create = async (req, res) => {
       return res.status(400).json({ message: "Digite o endereço de acesso" });
     }
 
-    if (!password) {
+    if (!key) {
       return res.status(400).json({ message: "A senha é obrigatória." });
     }
 
@@ -53,7 +55,7 @@ exports.create = async (req, res) => {
       name,
       title,
       adress,
-      password,
+      key,
     });
 
     await params.save();
@@ -72,33 +74,28 @@ exports.create = async (req, res) => {
 
 // Atualização de senha do Projeto
 exports.update = async (req, res) => {
-  const {id} = req.params;
- 
+  const { id } = req.params;
+
   try {
+    const paramsUpdate = await Params.findByIdAndUpdate(id, req.body);
 
-  const paramsUpdate = await Params.findByIdAndUpdate(id, req.body);
-
-  res.status(200).json(paramsUpdate)
-
+    res.status(200).json(paramsUpdate);
   } catch (error) {
-    res.status(400).json({error, msg: "Erro ao processar sua requisição"});
+    res.status(400).json({ error, msg: "Erro ao processar sua requisição" });
   }
-  
 };
 
 exports.remove = async (req, res) => {
   const { id } = req.params;
-   
+
   try {
     const paramsExists = await Params.findByIdAndRemove(id);
 
-    if(!paramsExists) {
-      res.status(200).json('Cliente removido');
+    if (!paramsExists) {
+      res.status(200).json("Cliente removido");
     }
-
-    
   } catch (error) {
-    res.status(400).json({error, msg: "Erro ao processar sua requisição"});
+    res.status(400).json({ error, msg: "Erro ao processar sua requisição" });
   }
 };
 

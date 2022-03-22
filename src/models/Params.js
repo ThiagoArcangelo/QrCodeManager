@@ -13,11 +13,11 @@ const paramSchema = mongoose.Schema({
     type: String,
     required: true,
   },
-  password: {
+  key: {
     type: String,
     required: true,
     minlength: 4,
-    select: false
+    // select: false
   },
 });
 

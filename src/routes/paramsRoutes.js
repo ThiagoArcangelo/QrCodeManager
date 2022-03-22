@@ -4,10 +4,10 @@ const authorize = require('../middlewares/authorize');
 
 const router = Router();
 
-router.post("/project", controller.create);
-router.get("/project", controller.get);
-router.get("/project/:id", controller.getById);
-router.put("/project/:id", controller.update);
-router.delete('/project/:id', controller.remove);
+router.post("/projects", controller.create);
+router.get("/projects", controller.get);
+router.get("/projects/:id", controller.getById);
+router.put("/projects/:id", controller.update);
+router.delete('/projects/:id', controller.remove);
 
 module.exports = router;
