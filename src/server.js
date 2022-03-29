@@ -6,7 +6,7 @@ const cors = require('cors');
 // Routes
 const userRoutes = require("./routes/userRoutes");
 const publicRoutes = require("./routes/publicRoutes");
-const paramsRoutes = require("./routes/paramsRoutes");
+const paramsRoutes = require("./routes/projectsRoutes");
 // const clientRoutes = require('./routes/clientRoutes')
 
 const app = express();

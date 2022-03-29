@@ -1,6 +1,13 @@
 const User = require("../models/User");
-// const bcrypt = require("bcrypt");
-// const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+const authConfig = require("../../config/authConfig.json");
+
+function generateToken(params = {}) {
+  return jwt.sign(params, authConfig.secret, {
+    expiresIn: 86400,
+  });
+}
 
 // Listar usuários
 exports.list = async (req, res) => {
@@ -37,13 +44,18 @@ exports.create = async (req, res) => {
     const user = await User.create({
       name,
       email,
-      // password: hashPass,
       password,
     });
 
-    await user.save();
+    user.password = undefined;
 
-    res.status(201).json({ message: "Usuário criado com sucesso" });
+    // await user.save();
+
+    res.send({
+      message: "Usuário criado com sucesso",
+      user,
+      token: generateToken({id: user.id})
+    });
   } catch (error) {
     res
       .status(400)
@@ -79,7 +91,7 @@ exports.remove = async (req, res) => {
   }
 };
 
-exports.signIn = async (req, res) => {
+/* exports.signIn = async (req, res) => {
   const { email, password } = req.body;
 
   const userExists = await User.findOne({ email: email, password: password});
@@ -92,4 +104,25 @@ exports.signIn = async (req, res) => {
   }
 };
 
-exports.signOut = (req, res) => {};
+exports.signOut = (req, res) => {}; */
+
+exports.authenticate = async (req, res) => {
+  const { email, password } = req.body;
+
+  const user = await User.findOne({ email }).select("+password");
+
+  if (!user) {
+    return res.status(400).send({ error: "User not found" });
+  }
+
+  if (!await bcrypt.compare(password, user.password)) {
+    return res.status(400).send({ error: "Invalid passwod" });
+  }
+
+  user.password = undefined;
+
+  res.send({
+    user,
+    token: generateToken({ id: user.id }),
+  });
+};

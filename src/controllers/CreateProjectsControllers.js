@@ -9,8 +9,8 @@ exports.get = async (req, res) => {
 };
 
 // Listar Url - View => Parametro para permissãoa
-exports.getById = async (req, res) => {
-  const { id, key } = req.params;
+exports.getById =  (req, res) => {
+  const { id } = req.params;
 
   const getParams = Params.findById(id, (err, content) => {
     if (err) {
@@ -99,4 +99,13 @@ exports.remove = async (req, res) => {
   }
 };
 
+exports.redirect = async (req, res) => {
+  const { key } = req.body;
+  const { id } = req.params;
+  
+  if(key !== id) {
+    res.status(400).json({Message: "Chave incorreta"});
+  } 
 
+  res.redirect(`/projects/:${id}`);
+}
