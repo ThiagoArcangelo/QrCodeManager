@@ -15,9 +15,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cors());
 
+const port = process.env.PORT || 3000
+
 // Models
 const User = require("./models/User");
-const Params = require("./models/Params");
+const Params = require("./models/Projects");
 const Client = require('./routes/clientRoutes');
 
 app.use(userRoutes);
@@ -34,7 +36,7 @@ mongoose
     `mongodb+srv://${dbUser}:${dbPassword}@qrcode.rsgma.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`
   )
   .then(
-    app.listen(3000, () => {
+    app.listen(port, () => {
       console.log("Conectou ao banco de dados.");
     })
   )

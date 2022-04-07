@@ -1,21 +1,21 @@
-const Params = require("../models/Params");
+const Params = require("../models/Projects");
 
 exports.authorize = async (req, res, next) => {
 
   const { id } = req.params; 
   const { key } = req.body;
   
-  const keyUser = Params.find({key: key}, (err, data) => {
+  const keyUserExists = await Params.find({id: id, key: key}, (err, data) => {
     if(err) {
-      return res.status(400).json({message: "Invalid Key"});
+      return res.status(400).json({message: "Chave inválida!"});
     }
 
-    else if(data !== id.key) {
+    else if(key !== data.key) {
       return res.status(400).json({error: "Invalid Key"});
     }
   }) 
 
-  
+  req.userId = decoded.id;
   
   next();
   

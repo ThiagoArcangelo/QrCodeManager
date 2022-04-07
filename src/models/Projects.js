@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const paramSchema = mongoose.Schema({
+const ProjectSchema = mongoose.Schema({
   name: {
     type: String,
     required: true,
@@ -21,4 +21,4 @@ const paramSchema = mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model("Params", paramSchema);
+module.exports = mongoose.model("Projects", ProjectSchema);

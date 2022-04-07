@@ -1,9 +1,9 @@
-const Params = require("../models/Params");
+const Projects = require("../models/Projects");
 // const jwt = require('jsonwebtoken');
 
 // Listagem de URL - View => Admin
 exports.get = async (req, res) => {
-  const list = await Params.find();
+  const list = await Projects.find();
 
   return res.status(200).json(list);
 };
@@ -11,13 +11,14 @@ exports.get = async (req, res) => {
 // Listar Url - View => Parametro para permissãoa
 exports.getById =  (req, res) => {
   const { id } = req.params;
+ 
 
-  const getParams = Params.findById(id, (err, content) => {
+  const getParams = Projects.findById(id, (err, content) => {
     if (err) {
       res.status(500).json({ erro: err });
     } 
-    else if (content.adress) {
-      return res.status(200).json(content.adress); 
+    else if (content.adress) {    
+    return res.status(200).json(content.adress); 
     }
   });
 };
@@ -43,15 +44,15 @@ exports.create = async (req, res) => {
       return res.status(400).json({ message: "A senha é obrigatória." });
     }
 
-    const adressExists = await Params.findOne({ adress });
+    const urlExists = await Params.findOne({ adress });
 
-    if (adressExists) {
+    if (urlExists) {
       return res.status(500).json({
         message: "A url deste projeto ja esta registrado. Ultilize outra url",
       });
     }
 
-    const params = await Params.create({
+    const params = await Projects.create({
       name,
       title,
       adress,
@@ -77,9 +78,9 @@ exports.update = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const paramsUpdate = await Params.findByIdAndUpdate(id, req.body);
+    const updateProject = await Projects.findByIdAndUpdate(id, req.body);
 
-    res.status(200).json(paramsUpdate);
+    res.status(200).json(updateProject);
   } catch (error) {
     res.status(400).json({ error, msg: "Erro ao processar sua requisição" });
   }
@@ -99,13 +100,15 @@ exports.remove = async (req, res) => {
   }
 };
 
-exports.redirect = async (req, res) => {
-  const { key } = req.body;
+exports.verifyKey = async (req, res) => {
   const { id } = req.params;
-  
-  if(key !== id) {
-    res.status(400).json({Message: "Chave incorreta"});
-  } 
+  const { key } = req.body;
 
-  res.redirect(`/projects/:${id}`);
+  const keyExists = await Projects.findOne({ key });
+
+  if(!key) {
+    res.status(400).send({error: "Erro ao processar sua requisição."});
+  }
+
+  res.render('/projects/:id');
 }
