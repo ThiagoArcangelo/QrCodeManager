@@ -11,14 +11,23 @@ exports.get = async (req, res) => {
 // Listar Url - View => Parametro para permissãoa
 exports.getById =  (req, res) => {
   const { id } = req.params;
+  const key = req.key;
+
+  if(!key) {
+    return res.status(400).json({message: "Digite a chave do projeto"})
+  }
  
 
   const getParams = Projects.findById(id, (err, content) => {
     if (err) {
       res.status(500).json({ erro: err });
     } 
-    else if (content.adress) {    
-    return res.status(200).json(content.adress); 
+
+    if(!content) {
+      return res.status(400).json({message: "Projeto inexistente"});
+    }
+    if (content.adress) {    
+    return res.send(content.adress); 
     }
   });
 };
@@ -44,30 +53,28 @@ exports.create = async (req, res) => {
       return res.status(400).json({ message: "A senha é obrigatória." });
     }
 
-    const urlExists = await Params.findOne({ adress });
+    const urlExists = await Projects.findOne({ adress });
 
     if (urlExists) {
-      return res.status(500).json({
+      return res.status(400).json({
         message: "A url deste projeto ja esta registrado. Ultilize outra url",
       });
     }
 
-    const params = await Projects.create({
+    const params =  Projects.create({
       name,
       title,
       adress,
       key,
     });
 
-    await params.save();
+    // await params.save();
 
-    res.status(201).json({ message: "Link criado com sucesso" });
+    res.status(201).send({ message: "Link criado com sucesso" });
 
-    // return params.adress;
   } catch (error) {
-    console.log(error, "Não foi possível salvar o arquivo no banco de dados.");
-
-    res.status(400).json(error, {
+    
+    res.status(400).send(error , {
       message: "Não foi possível salvar o arquivo no banco de dados.",
     });
   }
@@ -90,7 +97,7 @@ exports.remove = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const paramsExists = await Params.findByIdAndRemove(id);
+    const paramsExists = await Projects.findByIdAndRemove(id);
 
     if (!paramsExists) {
       res.status(200).json("Cliente removido");
@@ -100,15 +107,21 @@ exports.remove = async (req, res) => {
   }
 };
 
-exports.verifyKey = async (req, res) => {
-  const { id } = req.params;
-  const { key } = req.body;
+exports.validate = async  (req, res) => {
+  const id = req.userId;
 
-  const keyExists = await Projects.findOne({ key });
+  const keyExists = await Projects.find({key}, (err, result) => {
+     
+      if(err) {
+          return res.status(400).send('Erro ao processar sua requisição.');
+      }
 
-  if(!key) {
-    res.status(400).send({error: "Erro ao processar sua requisição."});
-  }
+      if(id.key != result) {
+          return res.status(400).send("Senha inválida");
+      }
 
-  res.render('/projects/:id');
+      res.redirect(`/projects/:${id}`);
+
+      
+  })
 }

@@ -7,7 +7,6 @@ const cors = require('cors');
 const userRoutes = require("./routes/userRoutes");
 const publicRoutes = require("./routes/publicRoutes");
 const paramsRoutes = require("./routes/projectsRoutes");
-// const clientRoutes = require('./routes/clientRoutes')
 
 const app = express();
 
@@ -15,11 +14,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cors());
 
-const port = process.env.PORT || 3000
+const port = process.env.PORT || 3000;
 
 // Models
 const User = require("./models/User");
-const Params = require("./models/Projects");
+const Projects = require("./models/Projects");
 const Client = require('./routes/clientRoutes');
 
 app.use(userRoutes);
