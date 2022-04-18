@@ -1,31 +1,26 @@
 const Projects = require("../models/Projects");
 
-exports.redirect = async (req, res, next) => {
+exports.validate =  async (req, res, next) => {
   const { id } = req.params;
-  const key = req.query;
+  const { key } = req.body;
 
-  if(!key) {
-    return res.status(400).json({message: "Digite a chave de acesso"});
-  }
+  const idValidate = await Projects.findById(id, (err, result) => {
+    if (err) {
+      res.status(400).json({ message: "Erro ao processar sua requisição" });
+    }
 
-  try {
-    const idValidate = await Projects.find({ id }, (err, data) => {
-      if (err) {
-        return res.status(400).json({ message: "Projeto inexistente." });
-      }
+    if (!id) {
+      res.status(400).json({ message: "Projeto inexistente" });
+    }
 
-      if(key != data.key) {
-        return res.status(400).send({message: "Chave inválida"});
-      }
-    });
-  } catch (error) {
-    return res
-      .status(400)
-      .send({ error, message: "Não foi possível processar sua requisição" });
-  }
+    if (key != result.key || key == '') {
+      res.status(400).send({ message: "Chave inválida" });
+    }
 
-  req.userId = decoded.id;
-  req.key = key;
+    res.status(200).send(result);
+  });
+
+  req.id = id;
 
   next();
 };

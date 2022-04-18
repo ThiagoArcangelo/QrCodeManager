@@ -9,27 +9,13 @@ exports.get = async (req, res) => {
 };
 
 // Listar Url - View => Parametro para permissãoa
-exports.getById =  (req, res) => {
-  const { id } = req.params;
-  const key = req.key;
+exports.getById = async (req, res) => {
+  const {id} = req.params;
 
-  if(!key) {
-    return res.status(400).json({message: "Digite a chave do projeto"})
-  }
- 
+  const projectExists = await Projects.findById(id);
 
-  const getParams = Projects.findById(id, (err, content) => {
-    if (err) {
-      res.status(500).json({ erro: err });
-    } 
-
-    if(!content) {
-      return res.status(400).json({message: "Projeto inexistente"});
-    }
-    if (content.adress) {    
-    return res.send(content.adress); 
-    }
-  });
+    res.status(200).json(projectExists.adress);
+  
 };
 
 // Criar novo Projeto - Admin
@@ -61,7 +47,7 @@ exports.create = async (req, res) => {
       });
     }
 
-    const params =  Projects.create({
+    const params = Projects.create({
       name,
       title,
       adress,
@@ -71,10 +57,8 @@ exports.create = async (req, res) => {
     // await params.save();
 
     res.status(201).send({ message: "Link criado com sucesso" });
-
   } catch (error) {
-    
-    res.status(400).send(error , {
+    res.status(400).send(error, {
       message: "Não foi possível salvar o arquivo no banco de dados.",
     });
   }
@@ -106,22 +90,3 @@ exports.remove = async (req, res) => {
     res.status(400).json({ error, msg: "Erro ao processar sua requisição" });
   }
 };
-
-exports.validate = async  (req, res) => {
-  const id = req.userId;
-
-  const keyExists = await Projects.find({key}, (err, result) => {
-     
-      if(err) {
-          return res.status(400).send('Erro ao processar sua requisição.');
-      }
-
-      if(id.key != result) {
-          return res.status(400).send("Senha inválida");
-      }
-
-      res.redirect(`/projects/:${id}`);
-
-      
-  })
-}

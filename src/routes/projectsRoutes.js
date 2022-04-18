@@ -1,6 +1,6 @@
 const { Router } = require("express");
 const controller = require("../controllers/CreateProjectsControllers");
-const { redirect } = require('../middlewares/redirect');
+const {validate} = require('../middlewares/redirect');
 const authMid = require('../middlewares/auth');
 
 const router = Router();
@@ -9,9 +9,9 @@ const router = Router();
 
 router.post("/projects", controller.create);
 router.get("/projects", controller.get);
-router.get("/projects/:id", redirect, controller.getById);
+router.get("/projects/:id",  controller.getById);
 router.put("/projects/:id", controller.update);
 router.delete('/projects/:id', controller.remove);
-router.post('/projects/validate', redirect, controller.validate);
+// router.post('/projects/validate', validate, controller.validate);
 
 module.exports = router;
