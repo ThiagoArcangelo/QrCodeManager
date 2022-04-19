@@ -12,7 +12,8 @@ exports.get = async (req, res) => {
 exports.getById = async (req, res) => {
   const { id } = req.id;
 
-  res.status(200).send(JSON.stringify(id));
+  // res.status(200).send(JSON.stringify(id));
+  res.status(200).json(id);
 };
 
 // Criar novo Projeto - Admin
@@ -87,3 +88,17 @@ exports.remove = async (req, res) => {
     res.status(400).json({ error, msg: "Erro ao processar sua requisição" });
   }
 };
+
+exports.validateKey = (req, res) => {
+  const { key } = req.body;
+  
+  try {
+    if(!key) {
+      res.status(400).json({message: "Digite a chave de acesso"});
+    }
+
+    res.send(key);
+  } catch (error) {
+    return res.status(400).json({message: "Sua requisição não foi processada."});
+  }
+}

@@ -7,6 +7,7 @@ const cors = require('cors');
 const userRoutes = require("./routes/userRoutes");
 const publicRoutes = require("./routes/publicRoutes");
 const paramsRoutes = require("./routes/projectsRoutes");
+const Client = require('./routes/clientRoutes');
 
 const app = express();
 
@@ -19,7 +20,6 @@ const port = process.env.PORT || 3000;
 // Models
 const User = require("./models/User");
 const Projects = require("./models/Projects");
-const Client = require('./routes/clientRoutes');
 
 app.use(userRoutes);
 app.use(publicRoutes);
@@ -36,7 +36,7 @@ mongoose
   )
   .then(
     app.listen(port, () => {
-      console.log("Conectou ao banco de dados.");
+      console.log("Conectado.");
     })
   )
   .catch((error) => console.log(error)

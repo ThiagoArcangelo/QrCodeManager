@@ -2,6 +2,8 @@ const User = require("../models/User");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const authConfig = require("../../config/authConfig.json");
+const req = require("express/lib/request");
+const res = require("express/lib/response");
 
 function generateToken(params = {}) {
   return jwt.sign(params, authConfig.secret, {
@@ -106,7 +108,7 @@ exports.remove = async (req, res) => {
 
 exports.signOut = (req, res) => {}; */
 
-exports.authenticate = async (req, res) => {
+exports.login = async (req, res) => {
   const { email, password } = req.body;
 
   const user = await User.findOne({ email }).select("+password");
@@ -126,3 +128,8 @@ exports.authenticate = async (req, res) => {
     token: generateToken({ id: user.id }),
   });
 };
+
+exports.logout = (req, res) => {
+  req.logout();
+  res.redirect('/login');
+}
