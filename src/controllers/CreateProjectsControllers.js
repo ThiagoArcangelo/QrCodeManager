@@ -10,12 +10,9 @@ exports.get = async (req, res) => {
 
 // Listar Url - View => Parametro para permissãoa
 exports.getById = async (req, res) => {
-  const {id} = req.params;
+  const { id } = req.id;
 
-  const projectExists = await Projects.findById(id);
-
-    res.status(200).json(projectExists.adress);
-  
+  res.status(200).send(JSON.stringify(id));
 };
 
 // Criar novo Projeto - Admin
