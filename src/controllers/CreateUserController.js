@@ -130,6 +130,6 @@ exports.login = async (req, res) => {
 };
 
 exports.logout = (req, res) => {
-  req.logout();
-  res.redirect('/login');
+  res.status(200).send({ auth: false, token: null });
 }
+
