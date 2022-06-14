@@ -1,13 +1,13 @@
 require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
-const cors = require('cors');
+const cors = require("cors");
 
 // Routes
 const userRoutes = require("./routes/userRoutes");
 const publicRoutes = require("./routes/publicRoutes");
 const paramsRoutes = require("./routes/projectsRoutes");
-const Client = require('./routes/clientRoutes');
+const Client = require("./routes/clientRoutes");
 
 const app = express();
 
@@ -15,7 +15,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cors());
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3333;
 
 // Models
 const User = require("./models/User");
@@ -36,8 +36,7 @@ mongoose
   )
   .then(
     app.listen(port, () => {
-      console.log("Conectado.");
+      console.log(`Conectado na porta ${port}`);
     })
   )
-  .catch((error) => console.log(error)
-);
+  .catch((error) => console.log(error));

@@ -5,7 +5,7 @@ module.exports = (req, res, next) => {
     const authHeader = req.headers.authorization;
 
     if(!authHeader) {
-        return res.status(401).json({error: "No token provider"});
+        return res.status(401).json({error: "Token não enviado"});
     }
 
     const parts = authHeader.split(' ');
@@ -18,11 +18,11 @@ module.exports = (req, res, next) => {
 
 
     if(!/^Bearer$/i.test(scheme)) {
-        return res.status(401).send({error: "Token malformated"});
+        return res.status(401).send({error: "Token mal formatado"});
     }
 
     jwt.verify(token, authConfig.secret, (err, decoded) => {
-        if(err) return res.status(401).send({ error: "Token Invalid"});
+        if(err) return res.status(401).send({ error: "Token inválido"});
 
         // Pegar o id com req.userId atraves do decoded que recebe a informação de id do usuario
         

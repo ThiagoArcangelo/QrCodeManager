@@ -2,8 +2,8 @@ const User = require("../models/User");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const authConfig = require("../../config/authConfig.json");
-const req = require("express/lib/request");
-const res = require("express/lib/response");
+/* const req = require("express/lib/request");
+const res = require("express/lib/response"); */
 
 function generateToken(params = {}) {
   return jwt.sign(params, authConfig.secret, {
@@ -56,7 +56,7 @@ exports.create = async (req, res) => {
     res.send({
       message: "Usuário criado com sucesso",
       user,
-      token: generateToken({id: user.id})
+      token: generateToken({ id: user.id }),
     });
   } catch (error) {
     res
@@ -86,7 +86,7 @@ exports.remove = async (req, res) => {
     const userClient = await User.findByIdAndRemove(id);
 
     if (!userClient) {
-      res.status(200).json("Cliente removido");
+      res.status(200).json("Projeto removido");
     }
   } catch (error) {
     res.status(400).json({ error, msg: "Erro ao processar sua requisição" });
@@ -117,7 +117,7 @@ exports.login = async (req, res) => {
     return res.status(400).send({ error: "User not found" });
   }
 
-  if (!await bcrypt.compare(password, user.password)) {
+  if (!(await bcrypt.compare(password, user.password))) {
     return res.status(400).send({ error: "Invalid passwod" });
   }
 
@@ -131,5 +131,5 @@ exports.login = async (req, res) => {
 
 exports.logout = (req, res) => {
   res.status(200).send({ auth: false, token: null });
-}
-
+  // res.redirect('/');
+};
