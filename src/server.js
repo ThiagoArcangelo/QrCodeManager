@@ -11,9 +11,9 @@ const Client = require("./routes/clientRoutes");
 
 const app = express();
 
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cors());
 
 const port = process.env.PORT || 3333;
 
