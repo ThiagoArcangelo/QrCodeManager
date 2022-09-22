@@ -48,7 +48,12 @@ exports.create = async (req, res) => {
 
 // Listagem de URL - View => Admin
 exports.get = async (req, res) => {
-  const list = await Projects.find();
+  const pagina = +req.query.page || 1;
+  const limite = +req.query.limit || 10;
+
+  const salto = (pagina - 1) * limite;
+
+  const list = await Projects.find().skip(salto).limit(limite);
 
   return res.status(200).json(list);
 };

@@ -13,10 +13,7 @@ exports.create = async (req, res) => {
       res.status(422).json({ message: "A senha é obrigatória." });
     }
 
-    const client = await Client.create({
-      name,
-      password,
-    });
+    a;
 
     await client.save();
 

@@ -3,13 +3,13 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 
+const app = express();
+
 // Routes
 const userRoutes = require("./routes/userRoutes");
 const publicRoutes = require("./routes/publicRoutes");
 const paramsRoutes = require("./routes/projectsRoutes");
-const Client = require("./routes/clientRoutes");
-
-const app = express();
+// const Client = require("./routes/clientRoutes");
 
 app.use(cors());
 app.use(express.json());
