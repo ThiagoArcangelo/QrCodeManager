@@ -7,10 +7,10 @@ const router = Router();
 
 // router.use(authMid);
 
-router.post("/projects", controller.create);
-router.get("/projects", controller.get);
-router.get("/projects/:id", validate, controller.getById);
-router.put("/projects/:id", controller.update);
-router.delete("/projects/:id", controller.remove);
+router.post("/", controller.create);
+router.get("/", controller.get);
+router.get("/:id", validate, controller.getById);
+router.put("/:id", controller.update);
+router.delete("/:id", controller.remove);
 
 module.exports = router;
