@@ -6,14 +6,16 @@ exports.validate = async (req, res, next) => {
   const { key } = req.query;
 
   try {
-    const idValidate = await Projects.findById(id);
+    const idValidate = await Projects.findOne({ _id: id });
 
     if (!idValidate) {
       res.status(400).json("Projeto inexistente");
     }
 
     if (key != idValidate.key) {
-      return res.status(400).json({ message: "Chave inválida. Digite novamente." });
+      return res
+        .status(400)
+        .json({ message: "Chave inválida. Digite novamente." });
     }
 
     req.id = id;

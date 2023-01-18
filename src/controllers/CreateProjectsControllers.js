@@ -1,5 +1,5 @@
 const Projects = require("../models/Projects");
-const jwt = require("jsonwebtoken");
+// const jwt = require("jsonwebtoken");
 
 exports.create = async (req, res) => {
   const { name, title, adress, key } = req.body;
@@ -62,31 +62,74 @@ exports.get = async (req, res) => {
 // Listar Url - View => Parametro para permissão
 exports.getById = async (req, res) => {
   const { id } = req.id;
+  // const { id } = req.params; // teste de rota
+
+  const list = await Projects.findById(id, (err, res) => {
+    if (err) {
+      console.log("Erro ao processar sua requisição" + err);
+    }
+    a;
+    res.status(200).send(res);
+  });
 
   // res.status(200).send(JSON.stringify(id));
-  res.status(200).json(id);
 };
 
 // Criar novo Projeto - Admin
 
 // Atualização de senha do Projeto
-exports.update = async (req, res) => {
-  const { id } = req.params;
-  const contentAll = req.body;
-  const options = { new: true };
-
+exports.update = (req, res) => {
   try {
-    const updateProject = await Projects.findByIdAndUpdate(
+    const { id } = req.params;
+    const { name, title, adress, key } = req.body;
+    // const options = { new: true };
+
+    const updateProject = Projects.findByIdAndUpdate(
       id,
-      contentAll,
-      options
+      {
+        name: name,
+        title: title,
+        adress: adress,
+        key: key,
+      },
+      (err, data) => {
+        if (err) {
+          // return err;
+          console.log(err);
+        }
+
+        return data;
+      }
     );
 
-    res.status(200).send(updateProject);
+    res.send(" Atualizado com sucesso");
+
+    console.log(updateProject);
   } catch (error) {
-    res.status(400).json({ error, msg: "Erro ao processar sua requisição" });
+    res.status(400).json({ msg: "Erro ao processar sua requisição", error });
   }
 };
+
+// exports.update = async (req, res) => {
+//   const { id } = req.params;
+//   const { name, title, adress, key } = req.body;
+//   // const options = { new: true };
+
+//   const updateProject = await Projects.findByIdAndUpdate(id, {
+//     name: name,
+//     title: title,
+//     adress: adress,
+//     key: key,
+//   })
+//     .then((res) =>  res.send({ message: "Atualizado com sucesso" }))
+
+//     // res.send(updateProject);
+
+//     // console.log(updateProject);
+//     .catch((error) =>
+//       res.status(400).json({ error, msg: "Erro ao processar sua requisição" })
+//     );
+// };
 
 exports.remove = async (req, res) => {
   const { id } = req.params;
@@ -102,7 +145,7 @@ exports.remove = async (req, res) => {
   }
 };
 
-exports.validateKey = (req, res) => {
+/* exports.validateKey = (req, res) => {
   const { key } = req.body;
 
   try {
@@ -117,3 +160,4 @@ exports.validateKey = (req, res) => {
       .json({ message: "Sua requisição não foi processada." });
   }
 };
+ */
