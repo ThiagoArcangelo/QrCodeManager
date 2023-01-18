@@ -61,8 +61,8 @@ exports.get = async (req, res) => {
 
 // Listar Url - View => Parametro para permissão
 exports.getById = async (req, res) => {
-  const { id } = req.id;
-  // const { id } = req.params; // teste de rota
+  // const { id } = req.id;
+  const { id } = req.params; // teste de rota
 
   const list = await Projects.findById(id, (err, res) => {
     if (err) {
@@ -78,58 +78,34 @@ exports.getById = async (req, res) => {
 // Criar novo Projeto - Admin
 
 // Atualização de senha do Projeto
-exports.update = (req, res) => {
+exports.update = async (req, res) => {
   try {
     const { id } = req.params;
     const { name, title, adress, key } = req.body;
-    // const options = { new: true };
+    const options = { new: true };
 
-    const updateProject = Projects.findByIdAndUpdate(
-      id,
+    const updateProject = await Projects.findByIdAndUpdate(
+      { _id: id },
       {
         name: name,
         title: title,
         adress: adress,
         key: key,
       },
+      options,
       (err, data) => {
         if (err) {
           // return err;
-          console.log(err);
+          console.log(err, "Erro ao processar sua requisição");
         }
 
-        return data;
+        res.send(data);
       }
     );
-
-    res.send(" Atualizado com sucesso");
-
-    console.log(updateProject);
   } catch (error) {
     res.status(400).json({ msg: "Erro ao processar sua requisição", error });
   }
 };
-
-// exports.update = async (req, res) => {
-//   const { id } = req.params;
-//   const { name, title, adress, key } = req.body;
-//   // const options = { new: true };
-
-//   const updateProject = await Projects.findByIdAndUpdate(id, {
-//     name: name,
-//     title: title,
-//     adress: adress,
-//     key: key,
-//   })
-//     .then((res) =>  res.send({ message: "Atualizado com sucesso" }))
-
-//     // res.send(updateProject);
-
-//     // console.log(updateProject);
-//     .catch((error) =>
-//       res.status(400).json({ error, msg: "Erro ao processar sua requisição" })
-//     );
-// };
 
 exports.remove = async (req, res) => {
   const { id } = req.params;
@@ -144,20 +120,3 @@ exports.remove = async (req, res) => {
     res.status(400).json({ error, msg: "Erro ao processar sua requisição" });
   }
 };
-
-/* exports.validateKey = (req, res) => {
-  const { key } = req.body;
-
-  try {
-    if (!key) {
-      res.status(400).json({ message: "Digite a chave de acesso" });
-    }
-
-    res.send(key);
-  } catch (error) {
-    return res
-      .status(400)
-      .json({ message: "Sua requisição não foi processada." });
-  }
-};
- */
