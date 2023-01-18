@@ -38,7 +38,7 @@ exports.create = async (req, res) => {
 
     // await params.save();
 
-    res.status(201).send({ message: "Link criado com sucesso" });
+    res.status(201).send({ message: "Projeto criado com sucesso" });
   } catch (error) {
     res.status(400).send(error, {
       message: "Não foi possível salvar o arquivo no banco de dados.",
@@ -48,9 +48,15 @@ exports.create = async (req, res) => {
 
 // Listagem de URL - View => Admin
 exports.get = async (req, res) => {
-  const list = await Projects.find();
-
-  return res.status(200).json(list);
+  try {
+    const list = await Projects.find();
+    return res.status(200).json(list);
+  } catch (error) {
+    res.status(400).json({
+      error: console.log(error),
+      message: "Erro ao processar sua requisição",
+    });
+  }
 };
 
 // Listar Url - View => Parametro para permissão

@@ -3,13 +3,10 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 
-// Routes
-const userRoutes = require("./routes/userRoutes");
-const publicRoutes = require("./routes/publicRoutes");
-const paramsRoutes = require("./routes/projectsRoutes");
-const Client = require("./routes/clientRoutes");
-
 const app = express();
+
+// Routes
+const indexRoutes = require("./routes/index");
 
 app.use(cors());
 app.use(express.json());
@@ -21,10 +18,7 @@ const port = process.env.PORT || 3333;
 const User = require("./models/User");
 const Projects = require("./models/Projects");
 
-app.use(userRoutes);
-app.use(publicRoutes);
-app.use(paramsRoutes);
-// app.use(clientRoutes);
+app.use(indexRoutes);
 
 // Credentials
 const dbUser = process.env.DB_USER;
