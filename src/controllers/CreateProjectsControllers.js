@@ -78,33 +78,23 @@ exports.getById = async (req, res) => {
 // Criar novo Projeto - Admin
 
 // Atualização de senha do Projeto
-exports.update = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const { name, title, adress, key } = req.body;
-    const options = { new: true };
+exports.update = (req, res) => {
+  const { id } = req.params;
+  const { name, title, adress, key } = req.body;
+  const options = { new: true };
 
-    const updateProject = await Projects.findByIdAndUpdate(
-      { _id: id },
-      {
-        name: name,
-        title: title,
-        adress: adress,
-        key: key,
-      },
-      options,
-      (err, data) => {
-        if (err) {
-          // return err;
-          console.log(err, "Erro ao processar sua requisição");
-        }
-
-        res.send(data);
-      }
-    );
-  } catch (error) {
-    res.status(400).json({ msg: "Erro ao processar sua requisição", error });
-  }
+  const updateProject = Projects.findByIdAndUpdate(
+    id,
+    { title: title, name: name, adress: adress, key: key },
+    options
+  )
+    .then((response) => res.send(response))
+    .catch((error) => {
+      console.log({
+        message: "Não foi possível processar sua requisição",
+        error,
+      });
+    });
 };
 
 exports.remove = async (req, res) => {
