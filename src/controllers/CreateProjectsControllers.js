@@ -63,16 +63,12 @@ exports.get = async (req, res) => {
 exports.getById = async (req, res) => {
   // const { id } = req.id;
   const { id } = req.params; // teste de rota
-
-  const list = await Projects.findById(id, (err, res) => {
-    if (err) {
-      console.log("Erro ao processar sua requisição" + err);
-    }
-    a;
-    res.status(200).send(res);
-  });
-
-  // res.status(200).send(JSON.stringify(id));
+  try {
+    const listId = await Projects.findById(id);
+    res.send(listId);
+  } catch (error) {
+    console.log("Erro ao processar sua requisição", error);
+  }
 };
 
 // Criar novo Projeto - Admin
