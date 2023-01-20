@@ -1,5 +1,5 @@
 const Projects = require("../models/Projects");
-const jwt = require("jsonwebtoken");
+// const jwt = require("jsonwebtoken");
 
 exports.create = async (req, res) => {
   const { name, title, adress, key } = req.body;
@@ -61,31 +61,36 @@ exports.get = async (req, res) => {
 
 // Listar Url - View => Parametro para permissão
 exports.getById = async (req, res) => {
-  const { id } = req.id;
-
-  // res.status(200).send(JSON.stringify(id));
-  res.status(200).json(id);
+  // const { id } = req.id;
+  const { id } = req.params; // teste de rota
+  try {
+    const listId = await Projects.findById(id);
+    res.send(listId);
+  } catch (error) {
+    console.log("Erro ao processar sua requisição", error);
+  }
 };
 
 // Criar novo Projeto - Admin
 
 // Atualização de senha do Projeto
-exports.update = async (req, res) => {
+exports.update = (req, res) => {
   const { id } = req.params;
-  const contentAll = req.body;
+  const { name, title, adress, key } = req.body;
   const options = { new: true };
 
-  try {
-    const updateProject = await Projects.findByIdAndUpdate(
-      id,
-      contentAll,
-      options
-    );
-
-    res.status(200).send(updateProject);
-  } catch (error) {
-    res.status(400).json({ error, msg: "Erro ao processar sua requisição" });
-  }
+  const updateProject = Projects.findByIdAndUpdate(
+    id,
+    { title: title, name: name, adress: adress, key: key },
+    options
+  )
+    .then((response) => res.send(response))
+    .catch((error) => {
+      console.log({
+        message: "Não foi possível processar sua requisição",
+        error,
+      });
+    });
 };
 
 exports.remove = async (req, res) => {
@@ -99,21 +104,5 @@ exports.remove = async (req, res) => {
     }
   } catch (error) {
     res.status(400).json({ error, msg: "Erro ao processar sua requisição" });
-  }
-};
-
-exports.validateKey = (req, res) => {
-  const { key } = req.body;
-
-  try {
-    if (!key) {
-      res.status(400).json({ message: "Digite a chave de acesso" });
-    }
-
-    res.send(key);
-  } catch (error) {
-    return res
-      .status(400)
-      .json({ message: "Sua requisição não foi processada." });
   }
 };

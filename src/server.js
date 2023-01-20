@@ -14,9 +14,9 @@ app.use(express.urlencoded({ extended: false }));
 
 const port = process.env.PORT || 3333;
 
-// Models
-const User = require("./models/User");
-const Projects = require("./models/Projects");
+// // Models
+// const User = require("./models/User");
+// const Projects = require("./models/Projects");
 
 app.use(indexRoutes);
 
