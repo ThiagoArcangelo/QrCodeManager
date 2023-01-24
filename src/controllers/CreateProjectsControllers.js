@@ -61,11 +61,21 @@ exports.get = async (req, res) => {
 
 // Listar Url - View => Parametro para permissão
 exports.getById = async (req, res) => {
-  // const { id } = req.id;
   const { id } = req.params; // teste de rota
   try {
     const listId = await Projects.findById(id);
-    res.send(listId);
+    return res.status(200).json(listId);
+  } catch (error) {
+    console.log("Erro ao processar sua requisição", error);
+  }
+};
+
+// Listar Url para o formulario de edição
+exports.getPasswordById = async (req, res) => {
+  // const { id } = req.params; // teste de rota
+  try {
+    const listId = await Projects.findById(req.id);
+    return res.status(200).json(listId);
   } catch (error) {
     console.log("Erro ao processar sua requisição", error);
   }
@@ -84,7 +94,8 @@ exports.update = (req, res) => {
     { title: title, name: name, adress: adress, key: key },
     options
   )
-    .then((response) => res.send(response))
+    // .then((response) => res.send(response))
+    .then(res.send(updateProject))
     .catch((error) => {
       console.log({
         message: "Não foi possível processar sua requisição",
