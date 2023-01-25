@@ -94,8 +94,8 @@ exports.update = (req, res) => {
     { title: title, name: name, adress: adress, key: key },
     options
   )
-    // .then((response) => res.send(response))
-    .then(res.send(updateProject))
+    .then((response) => res.send(response.data))
+    // .then(() => res.send(updateProject.data))
     .catch((error) => {
       console.log({
         message: "Não foi possível processar sua requisição",

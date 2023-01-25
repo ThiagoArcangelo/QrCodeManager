@@ -9,9 +9,9 @@ const router = Router();
 
 router.post("/", /* authMid, */ controller.create);
 router.get("/", /* authMid, */ controller.get);
-router.get("/:id", /* authMid, */ controller.getById);
-router.get("/update/:id", validatePassword, controller.getPasswordById);
+router.get("/update/:id", /* authMid, */ controller.getById);
 router.put("/update/:id", /* authMid, */ controller.update);
+router.get("/password/:id", validatePassword, controller.getPasswordById);
 router.delete("/:id", /* authMid, */ controller.remove);
 
 module.exports = router;
