@@ -22,5 +22,5 @@ exports.validatePassword = async (req, res, next) => {
     });
     
 
-  next();
+  
 };
