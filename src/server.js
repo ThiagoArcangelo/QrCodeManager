@@ -8,7 +8,11 @@ const app = express();
 // Routes
 const indexRoutes = require("./routes/index");
 
-app.use(cors());
+app.use(cors({
+  origin: "*",
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Password'],
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 

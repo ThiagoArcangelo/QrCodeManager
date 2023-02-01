@@ -75,11 +75,10 @@ exports.getPasswordById = async (req, res) => {
   // const { id } = req.params; // teste de rota
   try {
     const listId = await Projects.findById(req.id);
-    return res
-      .status(200)
-      .json({ message: console.log("Dados do projeto: "), Project: listId });
-    // res.redirect("https://www.google.com");
-    console.log(listId);
+    // return res
+    //   .status(200)
+    //   .json({ message: console.log("Dados do projeto: "), Project: listId });
+    res.redirect(listId.adress);
   } catch (error) {
     console.log("Erro ao processar sua requisição", error);
   }
