@@ -9,18 +9,22 @@ const app = express();
 const indexRoutes = require("./routes/index");
 
 app.use(cors({
-  origin: "*",
+  origin: ["*"],
   methods: ["GET", "POST", "PUT", "DELETE"],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Password'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'x-password'],
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+// app.use((req, res, next) => {
+//   res.header("Access-Control-Allow-Origin", "*");
+//   res.header(
+//     "Access-Control-Allow-Headers",
+//     "Origin, X-Requested-With, Content-Type, Accept"
+//   );
+//   next();
+// });
 
 const port = process.env.PORT || 3333;
-
-// // Models
-// const User = require("./models/User");
-// const Projects = require("./models/Projects");
 
 app.use(indexRoutes);
 

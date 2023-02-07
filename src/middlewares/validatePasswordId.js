@@ -5,19 +5,21 @@ exports.validatePassword = async (req, res, next) => {
 
   const password = req.headers["x-password"];
 
-  await Projects.findOne({ _id: id })
+  await Projects.findById(id)
     .then((data) => {
       if (!data._id) {
-        res.status(400).send({ message: "Usuário não encontrado" });
+        res.status(400).send("Conteúdo não encontrado!");
       }
       if (data.key === password) {
         req.id = id;
         next();
-      }
+      } 
     })
     .catch((error) => {
       res
-        .status(400)
-        .json({ message: "Sua requisição não foi processada.", error });
-    });
-};
+      .status(400)
+      .json({ message: "Sua requisição não foi processada.", error: error });
+    });    
+   
+  };
+  
