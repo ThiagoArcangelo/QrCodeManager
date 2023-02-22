@@ -8,11 +8,18 @@ const app = express();
 // Routes
 const indexRoutes = require("./routes/index");
 
-app.use(cors({
-  origin: ["*"],
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  allowedHeaders: ['Content-Type', 'Authorization', 'x-password'],
-}));
+// app.use(
+//   cors({
+//     origin: ["http://localhost:3000"],
+//     methods: ["GET", "POST", "PUT", "DELETE"],
+//     allowedHeaders: ["Content-Type", "Authorization", "x-password"],
+//   })
+// );
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+  })
+);
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 // app.use((req, res, next) => {

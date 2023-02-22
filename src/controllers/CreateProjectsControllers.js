@@ -72,15 +72,13 @@ exports.getById = async (req, res) => {
 
 // Listar Url para o formulario de edição
 exports.getPasswordById = async (req, res) => {
-  // const { id } = req.params; // teste de rota
   const id = req.id;
+  // const { id } = req.params;
   try {
     const listId = await Projects.findById(id);
-    // return res
-    //   .status(200)
-    //   .json({ message: console.log("Dados do projeto: "), Project: listId });
+    return res.status(200).json(listId.adress);
+    res.redirect(listId.adress);
     // res.redirect(listId.adress);
-    res.send(listId.adress);
   } catch (error) {
     console.log("Erro no metodo getPasswordId", error);
   }

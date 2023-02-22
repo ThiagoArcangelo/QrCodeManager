@@ -13,13 +13,11 @@ exports.validatePassword = async (req, res, next) => {
       if (data.key === password) {
         req.id = id;
         next();
-      } 
+      }
     })
     .catch((error) => {
       res
-      .status(400)
-      .json({ message: "Sua requisição não foi processada.", error: error });
-    });    
-   
-  };
-  
+        .status(400)
+        .json({ message: "Sua requisição não foi processada.", error: error });
+    });
+};
